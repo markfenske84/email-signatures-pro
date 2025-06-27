@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Mark Fenske
  * Text Domain: email-signatures-pro
  */
