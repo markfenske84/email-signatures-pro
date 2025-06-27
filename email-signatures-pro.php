@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Mark Fenske
  * Text Domain: email-signatures-pro
  */
@@ -90,6 +90,13 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				// Meta boxes.
 				add_action( 'add_meta_boxes_signature', array( $this, 'register_meta_boxes' ) );
 				add_action( 'save_post_signature', array( $this, 'save_signature_meta' ) );
+
+				// NEW: Handle manual update checks & notices in admin.
+				add_action( 'admin_init', array( $this, 'handle_check_updates_action' ) );
+				add_action( 'admin_notices', array( $this, 'maybe_show_update_notice' ) );
+
+				// NEW: Filter plugin meta row to add "Check for Updates" after author.
+				add_filter( 'plugin_row_meta', array( $this, 'add_plugin_row_meta' ), 10, 4 );
 			}
 
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_action_link' ) );
@@ -665,8 +672,66 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 		public function add_settings_action_link( $links ) {
 			$settings_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
 			$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . __( 'Settings', 'email-signatures-pro' ) . '</a>';
+
+			// Remove previously added Check for Updates from this set so it appears only in meta row.
 			array_unshift( $links, $settings_link );
 			return $links;
+		}
+
+		/**
+		 * Add a "Check for Updates" link to the plugin meta row (after author name).
+		 *
+		 * @param string[] $plugin_meta Array of the plugin row meta.
+		 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+		 * @param array    $plugin_data Data about the plugin.
+		 * @param string   $status      Status of the plugin.
+		 * @return string[]
+		 */
+		public function add_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+			if ( plugin_basename( __FILE__ ) !== $plugin_file ) {
+				return $plugin_meta;
+			}
+
+			$check_updates_url = wp_nonce_url( admin_url( 'plugins.php?esp_action=check_updates' ), 'esp_check_updates' );
+			$plugin_meta[] = '<a href="' . esc_url( $check_updates_url ) . '">' . __( 'Check for Updates', 'email-signatures-pro' ) . '</a>';
+			return $plugin_meta;
+		}
+
+		/**
+		 * Handle the "Check for Updates" action triggered from the plugin row link.
+		 */
+		public function handle_check_updates_action() {
+			if ( ! isset( $_GET['esp_action'] ) || 'check_updates' !== $_GET['esp_action'] ) {
+				return;
+			}
+
+			// Capability & nonce checks.
+			if ( ! current_user_can( 'update_plugins' ) ) {
+				return;
+			}
+			check_admin_referer( 'esp_check_updates' );
+
+			// Call Plugin Update Checker if available.
+			global $esp_update_checker;
+			if ( isset( $esp_update_checker ) && is_object( $esp_update_checker ) && method_exists( $esp_update_checker, 'checkForUpdates' ) ) {
+				$esp_update_checker->checkForUpdates();
+			} else {
+				// Fallback – ask WP to refresh all plugin updates.
+				wp_update_plugins();
+			}
+
+			// Redirect back to Plugins page so user can see result.
+			wp_safe_redirect( add_query_arg( 'esp_checked', '1', admin_url( 'plugins.php' ) ) );
+			exit;
+		}
+
+		/**
+		 * Display an admin notice after a manual update check has run.
+		 */
+		public function maybe_show_update_notice() {
+			if ( isset( $_GET['esp_checked'] ) && '1' === $_GET['esp_checked'] ) {
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Email Signatures Pro has just checked for updates. If a new version is available it will appear below.', 'email-signatures-pro' ) . '</p></div>';
+			}
 		}
 
 	}
