@@ -1,0 +1,20 @@
+{
+    "name": "markfenske/email-signatures-pro",
+    "type": "wordpress-plugin",
+    "description": "Manage email signature templates, global styles, assets and automatic updates.",
+    "require": {
+        "yahnis-elsts/plugin-update-checker": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "EmailSignaturesPro\\": ""
+        }
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Mark Fenske",
+            "email": "markfenske84@gmail.com"
+        }
+    ]
+} 

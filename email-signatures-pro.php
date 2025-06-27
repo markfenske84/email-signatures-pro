@@ -2,13 +2,37 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Mark Fenske
  * Text Domain: email-signatures-pro
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
+}
+
+// Initialize plugin update checker.
+// Attempt to load the library – via Composer autoload first, then bundled copy.
+if ( ! class_exists( 'Puc_v4_Factory' ) ) {
+	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+		require_once __DIR__ . '/vendor/autoload.php';
+	} elseif ( file_exists( __DIR__ . '/plugin-update-checker/plugin-update-checker.php' ) ) {
+		require_once __DIR__ . '/plugin-update-checker/plugin-update-checker.php';
+	}
+}
+
+// Configure the update checker if the library is available.
+if ( class_exists( 'Puc_v4_Factory' ) ) {
+	$esp_update_checker = Puc_v4_Factory::buildUpdateChecker(
+		// TODO: Replace this URL with the actual location of your update metadata file.
+		'https://example.com/updates/email-signatures-pro.json',
+		__FILE__,
+		'email-signatures-pro'
+	);
+
+	// OPTIONAL: If you're using a version control repository like GitHub, Bitbucket or GitLab, uncomment and adjust these lines.
+	// $esp_update_checker->setBranch( 'main' ); // e.g. main, stable, etc.
+	// $esp_update_checker->getVcsApi()->enableReleaseAssets();
 }
 
 if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
@@ -67,6 +91,8 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				add_action( 'add_meta_boxes_signature', array( $this, 'register_meta_boxes' ) );
 				add_action( 'save_post_signature', array( $this, 'save_signature_meta' ) );
 			}
+
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_action_link' ) );
 		}
 
 		/* --------------------------------------------------------------------- */
@@ -630,6 +656,17 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			clean_post_cache( $post_id );
 
 			wp_send_json_success();
+		}
+
+		/* --------------------------------------------------------------------- */
+		/* Plugin Row Action Links                                              */
+		/* --------------------------------------------------------------------- */
+
+		public function add_settings_action_link( $links ) {
+			$settings_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
+			$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . __( 'Settings', 'email-signatures-pro' ) . '</a>';
+			array_unshift( $links, $settings_link );
+			return $links;
 		}
 
 	}
