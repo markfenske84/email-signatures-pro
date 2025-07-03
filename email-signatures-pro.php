@@ -247,36 +247,47 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 		public function register_settings() {
 			register_setting( 'esp_settings_group', self::OPTION_KEY, array( $this, 'sanitize_settings' ) );
 
-			// Fonts Section.
-			add_settings_section( 'esp_fonts_section', __( 'Fonts', 'email-signatures-pro' ), '__return_false', 'email-signatures-pro' );
-			add_settings_field( 'fonts_url', __( 'Fonts Embed URL', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), 'email-signatures-pro', 'esp_fonts_section', array( 'id' => 'fonts_url' ) );
-			add_settings_field( 'heading_font_css', __( 'Heading Font CSS Family', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), 'email-signatures-pro', 'esp_fonts_section', array( 'id' => 'heading_font_css' ) );
-			add_settings_field( 'body_font_css', __( 'Body Font CSS Family', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), 'email-signatures-pro', 'esp_fonts_section', array( 'id' => 'body_font_css' ) );
+			// Map of tab slugs to page slugs used by Settings API.
+			$pages = array(
+				'fonts'   => 'esp_tab_fonts',
+				'colors'  => 'esp_tab_colors',
+				'images'  => 'esp_tab_images',
+				'social'  => 'esp_tab_social',
+				'general' => 'esp_tab_general',
+			);
 
-			// Colors Section.
-			add_settings_section( 'esp_colors_section', __( 'Colors', 'email-signatures-pro' ), '__return_false', 'email-signatures-pro' );
-			add_settings_field( 'primary_color', __( 'Primary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), 'email-signatures-pro', 'esp_colors_section', array( 'id' => 'primary_color' ) );
-			add_settings_field( 'secondary_color', __( 'Secondary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), 'email-signatures-pro', 'esp_colors_section', array( 'id' => 'secondary_color' ) );
-			add_settings_field( 'tertiary_color', __( 'Tertiary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), 'email-signatures-pro', 'esp_colors_section', array( 'id' => 'tertiary_color' ) );
-			add_settings_field( 'neutral_color', __( 'Neutral Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), 'email-signatures-pro', 'esp_colors_section', array( 'id' => 'neutral_color' ) );
+			/* ---------------- Fonts Tab ---------------- */
+			add_settings_section( 'esp_fonts_section', __( 'Fonts', 'email-signatures-pro' ), '__return_false', $pages['fonts'] );
+			add_settings_field( 'fonts_url', __( 'Fonts Embed URL', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['fonts'], 'esp_fonts_section', array( 'id' => 'fonts_url' ) );
+			add_settings_field( 'heading_font_css', __( 'Heading Font CSS Family', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['fonts'], 'esp_fonts_section', array( 'id' => 'heading_font_css' ) );
+			add_settings_field( 'body_font_css', __( 'Body Font CSS Family', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['fonts'], 'esp_fonts_section', array( 'id' => 'body_font_css' ) );
 
-			// Images Section.
-			add_settings_section( 'esp_images_section', __( 'Images', 'email-signatures-pro' ), '__return_false', 'email-signatures-pro' );
-			add_settings_field( 'default_avatar', __( 'Default Avatar', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), 'email-signatures-pro', 'esp_images_section', array( 'id' => 'default_avatar' ) );
-			add_settings_field( 'company_logo', __( 'Company Logo', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), 'email-signatures-pro', 'esp_images_section', array( 'id' => 'company_logo' ) );
-			add_settings_field( 'cta_button', __( 'CTA Button Image', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), 'email-signatures-pro', 'esp_images_section', array( 'id' => 'cta_button' ) );
+			/* ---------------- Colors Tab ---------------- */
+			add_settings_section( 'esp_colors_section', __( 'Colors', 'email-signatures-pro' ), '__return_false', $pages['colors'] );
+			add_settings_field( 'primary_color', __( 'Primary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), $pages['colors'], 'esp_colors_section', array( 'id' => 'primary_color' ) );
+			add_settings_field( 'secondary_color', __( 'Secondary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), $pages['colors'], 'esp_colors_section', array( 'id' => 'secondary_color' ) );
+			add_settings_field( 'tertiary_color', __( 'Tertiary Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), $pages['colors'], 'esp_colors_section', array( 'id' => 'tertiary_color' ) );
+			add_settings_field( 'neutral_color', __( 'Neutral Color', 'email-signatures-pro' ), array( $this, 'color_input_callback' ), $pages['colors'], 'esp_colors_section', array( 'id' => 'neutral_color' ) );
 
-			// Social Links Section.
-			add_settings_section( 'esp_social_section', __( 'Social Links', 'email-signatures-pro' ), '__return_false', 'email-signatures-pro' );
-			add_settings_field( 'social_links', __( 'Social Links', 'email-signatures-pro' ), array( $this, 'social_links_callback' ), 'email-signatures-pro', 'esp_social_section' );
+			/* ---------------- Images Tab ---------------- */
+			add_settings_section( 'esp_images_section', __( 'Images', 'email-signatures-pro' ), '__return_false', $pages['images'] );
+			add_settings_field( 'default_avatar', __( 'Default Avatar', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), $pages['images'], 'esp_images_section', array( 'id' => 'default_avatar' ) );
+			add_settings_field( 'company_logo', __( 'Company Logo', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), $pages['images'], 'esp_images_section', array( 'id' => 'company_logo' ) );
+			add_settings_field( 'cta_button', __( 'CTA Button Image', 'email-signatures-pro' ), array( $this, 'image_input_callback' ), $pages['images'], 'esp_images_section', array( 'id' => 'cta_button' ) );
 
-			// General Section
-			add_settings_section( 'esp_general_section', __( 'General', 'email-signatures-pro' ), '__return_false', 'email-signatures-pro' );
-			add_settings_field( 'website_url', __( 'Signature Website URL', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), 'email-signatures-pro', 'esp_general_section', array( 'id' => 'website_url' ) );
+			/* ---------------- Social Links Tab ---------------- */
+			add_settings_section( 'esp_social_section', __( 'Social Links', 'email-signatures-pro' ), '__return_false', $pages['social'] );
+			add_settings_field( 'social_links', __( 'Social Links', 'email-signatures-pro' ), array( $this, 'social_links_callback' ), $pages['social'], 'esp_social_section' );
+
+			/* ---------------- General Tab ---------------- */
+			add_settings_section( 'esp_general_section', __( 'General', 'email-signatures-pro' ), '__return_false', $pages['general'] );
+			add_settings_field( 'website_url', __( 'Signature Website URL', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['general'], 'esp_general_section', array( 'id' => 'website_url' ) );
 		}
 
 		public function sanitize_settings( $input ) {
-			$sanitized = array();
+			// Start with existing saved settings so we don\'t lose data from other tabs.
+			$existing   = get_option( self::OPTION_KEY, array() );
+			$sanitized  = is_array( $existing ) ? $existing : array();
 
 			$fields = [
 				'fonts_url', 'heading_font_css', 'body_font_css',
@@ -286,7 +297,8 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			];
 
 			foreach ( $fields as $field ) {
-				if ( isset( $input[ $field ] ) ) {
+				// Use array_key_exists so that empty strings still overwrite prior values.
+				if ( array_key_exists( $field, $input ) ) {
 					if ( 'website_url' === $field ) {
 						$sanitized[ $field ] = esc_url_raw( $input[ $field ] );
 					} else {
@@ -295,8 +307,8 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				}
 			}
 
-			// Social links is expected to be array of arrays with icon and url.
-			if ( isset( $input['social_links'] ) && is_array( $input['social_links'] ) ) {
+			// Social links is expected to be an array of arrays with icon and url.
+			if ( array_key_exists( 'social_links', $input ) && is_array( $input['social_links'] ) ) {
 				$sanitized['social_links'] = array();
 				foreach ( $input['social_links'] as $row ) {
 					$icon = ! empty( $row['icon'] ) ? esc_url_raw( $row['icon'] ) : '';
@@ -309,6 +321,9 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 						$sanitized['social_links'][] = array( 'icon' => $tinted_icon_url, 'url' => $url );
 					}
 				}
+			} elseif ( array_key_exists( 'social_links', $input ) ) {
+				// If the field is present but empty, clear existing social links.
+				$sanitized['social_links'] = array();
 			}
 
 			return $sanitized;
@@ -521,17 +536,51 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 		}
 
 		/* --------------------------------------------------------------------- */
+		/* Tab helpers                                                          */
+		/* --------------------------------------------------------------------- */
+
+		/**
+		 * Returns associative array of tab slug => label.
+		 */
+		private function get_setting_tabs() {
+			return array(
+				'fonts'   => __( 'Fonts', 'email-signatures-pro' ),
+				'colors'  => __( 'Colors', 'email-signatures-pro' ),
+				'images'  => __( 'Images', 'email-signatures-pro' ),
+				'social'  => __( 'Social Links', 'email-signatures-pro' ),
+				'general' => __( 'General', 'email-signatures-pro' ),
+			);
+		}
+
+		/* --------------------------------------------------------------------- */
 		/* Settings Page Markup                                                 */
 		/* --------------------------------------------------------------------- */
 
 		public function render_settings_page() {
+			$tabs = $this->get_setting_tabs();
+			$current = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'fonts';
+			if ( ! isset( $tabs[ $current ] ) ) {
+				$current = 'fonts';
+			}
+
+			// Base URL without tab param.
+			$base_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
 			?>
-			<div class="wrap"> 
+			<div class="wrap">
 				<h1><?php esc_html_e( 'Email Signatures Pro Settings', 'email-signatures-pro' ); ?></h1>
+
+				<h2 class="nav-tab-wrapper">
+					<?php foreach ( $tabs as $slug => $label ) :
+						$tab_url = add_query_arg( 'tab', $slug, $base_url );
+						$class   = ( $slug === $current ) ? 'nav-tab nav-tab-active' : 'nav-tab';
+						echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $label ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					endforeach; ?>
+				</h2>
+
 				<form method="post" action="options.php">
 					<?php
 					settings_fields( 'esp_settings_group' );
-					do_settings_sections( 'email-signatures-pro' );
+					do_settings_sections( 'esp_tab_' . $current );
 					submit_button();
 					?>
 				</form>

@@ -76,7 +76,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
     <?php endif; ?>
     <style>
         body{font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $secondary ); ?>;padding:40px;background:#f8f9fa;}
-        .signature-card{background:#fff;max-width:600px;margin:0 auto;padding:24px;}
+        .signature-card{background:#fff;max-width:420px;margin:0 auto;padding:20px;}
         .signature-name{font-family:<?php echo esc_html( $heading_css ); ?>;font-size:32px;font-weight:700;text-transform:uppercase;color:<?php echo esc_html( $primary ); ?>;margin:0;line-height:1;}
         .signature-title{margin:4px 0 16px;font-size:18px;text-transform:uppercase;color:<?php echo esc_html( $neutral ); ?>;line-height:1;}
         .signature-cta-line{text-align:left;margin:0;}
@@ -99,26 +99,26 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr style="display:block;margin-bottom:10px;">
                 <!-- Avatar -->
-                <td width="140" class="signature-avatar" valign="top" align="left" style="padding-right:20px;">
+                <td width="100" class="signature-avatar" valign="top" align="left" style="padding-right:20px;">
                     <?php if ( $avatar_url ) : ?>
-                        <img src="<?php echo esc_url( $avatar_url ); ?>" alt="Avatar" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" />
+                        <img src="<?php echo esc_url( $avatar_url ); ?>" alt="Avatar" style="width:100px;height:100px;border-radius:50%;object-fit:cover;" />
                     <?php elseif( ! empty( $options['default_avatar'] ) ) : ?>
-                        <img src="<?php echo esc_url( $options['default_avatar'] ); ?>" alt="Avatar" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" />
+                        <img src="<?php echo esc_url( $options['default_avatar'] ); ?>" alt="Avatar" style="width:100px;height:100px;border-radius:50%;object-fit:cover;" />
                     <?php endif; ?>
                 </td>
 
                 <!-- Main details -->
-                <td valign="top" align="left">
+                <td valign="top" align="left" style="padding-top:5px;">
                     <?php if ( $signature_name_img_url ) : ?>
-                        <img src="<?php echo esc_url( $signature_name_img_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" style="display:block;max-width:100%;height:40px;margin:0;" />
+                        <img src="<?php echo esc_url( $signature_name_img_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" style="display:block;max-width:100%;height:30px;margin:0;" />
                     <?php else : ?>
-                        <p class="signature-name esp-render" data-field="name" style="margin:0;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( get_the_title() ); ?></p>
+                        <p class="signature-name esp-render" data-field="name" style="margin:0;display:inline-block;white-space:nowrap;line-height:1;font-size:30px;"><?php echo esc_html( get_the_title() ); ?></p>
                     <?php endif; ?>
 
                     <?php if ( $signature_title_img_url ) : ?>
-                        <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;max-width:100%;height:20px;margin:4px 0 16px;" />
+                        <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;max-width:100%;height:15px;margin:6px 0 16px;" />
                     <?php else : ?>
-                        <p class="signature-title esp-render" data-field="title" style="margin:4px 0 16px;font-size:18px;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
+                        <p class="signature-title esp-render" data-field="title" style="margin:6px 0 16px;font-size:18px;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
                     <?php endif; ?>
 
                     <!-- CTA + Phone -->
@@ -126,13 +126,13 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                         <tr>
                             <?php if ( $cta_button ) : ?>
                                 <td class="signature-cta" style="padding-right:18px;">
-                                    <a href="<?php echo esc_url( $meeting_url ); ?>" target="_blank"><img src="<?php echo esc_url( $cta_button ); ?>" alt="CTA" style="display:block;max-height:40px;" /></a>
+                                    <a href="<?php echo esc_url( $meeting_url ); ?>" target="_blank"><img src="<?php echo esc_url( $cta_button ); ?>" alt="CTA" style="display:block;height:28px;" /></a>
                                 </td>
                             <?php endif; ?>
                             <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $secondary ); ?>;font-size:16px;white-space:nowrap;">
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $secondary ); ?>;text-decoration:none;font-weight:600;">
+                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $secondary ); ?>;text-decoration:none;font-weight:500;">
                                     <?php if ( $signature_phone_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_img_url ); ?>" alt="<?php echo esc_attr( 'M ' . $phone_display ); ?>" style="display:inline-block;max-height:24px;vertical-align:middle;" />
+                                        <img src="<?php echo esc_url( $signature_phone_img_url ); ?>" alt="<?php echo esc_attr( 'M ' . $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="phone"><small style="font-weight:400;">M</small> <?php echo esc_html( $phone_display ); ?></span>
                                     <?php endif; ?>
@@ -157,16 +157,17 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                             <td valign="middle" style="padding-right:20px;white-space:nowrap;">
                                 <?php if ( $company_logo ) : ?>
                                     <a href="<?php echo esc_url( $site_url_raw ); ?>" target="_blank" style="display:inline-block;">
-                                        <img src="<?php echo esc_url( $company_logo ); ?>" alt="Company Logo" style="max-height:35px;margin-top:2px;" />
+                                        <img src="<?php echo esc_url( $company_logo ); ?>" alt="Company Logo" style="margin-top:4px;" />
                                     </a>
                                 <?php endif; ?>
                             </td>
 
                             <!-- Phone bottom -->
-                            <td valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:16px;white-space:nowrap;">
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:600;">
+                            <td valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
+                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;display:inline-block;margin-top:-2px;">
+                                    <span style="font-size:18px;margin-right:2px;line-height:1;">○</span>
                                     <?php if ( $signature_phone_only_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:24px;vertical-align:middle;margin-top:-6px;" />
+                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="phone_only" style="font-weight:bold;"><?php echo esc_html( $phone_display ); ?></span>
                                     <?php endif; ?>
@@ -174,10 +175,10 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                             </td>
 
                             <!-- Website -->
-                            <td align="right" valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:16px;white-space:nowrap;">
-                                <a href="<?php echo esc_url( $site_url_raw ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:600;" target="_blank">
+                            <td align="right" valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
+                                <a href="<?php echo esc_url( $site_url_raw ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;" target="_blank">
                                     <?php if ( $signature_site_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:24px;vertical-align:middle;margin-top:-6px;" />
+                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="site"><?php echo esc_html( strtoupper( $site_domain ) ); ?></span>
                                     <?php endif; ?>
@@ -198,7 +199,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                     <?php if ( ! empty( $options['social_links'] ) ) : ?>
                         <div class="social-icons">
                             <?php foreach ( $options['social_links'] as $row ) : ?>
-                                <a href="<?php echo esc_url( $row['url'] ); ?>" target="_blank" rel="noopener" style="text-decoration:none;">
+                                <a href="<?php echo esc_url( $row['url'] ); ?>" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;">
                                     <img src="<?php echo esc_url( $row['icon'] ); ?>" alt="" style="width:24px;height:24px;margin-right:6px;" />
                                 </a>
                             <?php endforeach; ?>
@@ -221,7 +222,9 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
                 renders.forEach(function(el){
                     const field = el.dataset.field;
-                    html2canvas(el, {backgroundColor: null}).then(function(canvas){
+                    // Capture at higher pixel density so resulting PNG is crisp on retina/high-DPI displays.
+                    var scale = window.devicePixelRatio || 3; // default to 2× if DPR not available.
+                    html2canvas(el, {backgroundColor: null, scale: scale}).then(function(canvas){
                         var dataUrl = canvas.toDataURL('image/png');
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
