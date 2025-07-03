@@ -145,7 +145,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
             <!-- Divider -->
             <tr>
-                <td colspan="2" height="1" style="opacity:0.25;line-height:1px;font-size:1px;background:<?php echo esc_html( $neutral ); ?>;margin:0;padding:0;"></td>
+                <td colspan="2" height="1" style="line-height:1px;font-size:1px;background:#E4E5E7;margin:0;padding:0;"></td>
             </tr>
 
             <!-- Bottom row -->
@@ -164,10 +164,10 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
                             <!-- Phone bottom -->
                             <td valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;display:inline-block;margin-top:-2px;">
-                                    <span style="font-size:18px;margin-right:2px;line-height:1;">○</span>
+                                <span style="font-size:14px;margin-right:2px;line-height:1;display:inline-block;">○</span>
+                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;display:inline-block;margin-right:2px;">
                                     <?php if ( $signature_phone_only_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
+                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-15px;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="phone_only" style="font-weight:bold;"><?php echo esc_html( $phone_display ); ?></span>
                                     <?php endif; ?>
@@ -178,7 +178,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                             <td align="right" valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
                                 <a href="<?php echo esc_url( $site_url_raw ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;" target="_blank">
                                     <?php if ( $signature_site_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
+                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-15px;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="site"><?php echo esc_html( strtoupper( $site_domain ) ); ?></span>
                                     <?php endif; ?>
@@ -190,7 +190,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
             </tr>                     
             <!-- Divider -->
             <tr>
-                <td colspan="2" height="1" style="opacity:0.25;line-height:1px;font-size:1px;background:<?php echo esc_html( $neutral ); ?>;margin:0;padding:0;"></td>
+                <td colspan="2" height="1" style="line-height:1px;font-size:1px;background:#E4E5E7;margin:0;padding:0;"></td>
             </tr>
 
             <!-- Social Icons -->
