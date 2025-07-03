@@ -95,7 +95,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
     <?php if ( current_user_can( 'read' ) ) : ?>
         <button id="esp-copy-btn" style="display:none;margin-bottom:20px;padding:10px 16px;background:<?php echo esc_html( $primary ); ?>;color:#fff;border:none;border-radius:4px;cursor:pointer;">Copy Signature</button>
     <?php endif; ?>
-    <div class="signature-card">
+    <div class="signature-card" style="background:#ffffff;max-width:420px;padding:20px;">
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr style="display:block;margin-bottom:10px;">
                 <!-- Avatar -->
@@ -110,15 +110,15 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                 <!-- Main details -->
                 <td valign="top" align="left" style="padding-top:5px;">
                     <?php if ( $signature_name_img_url ) : ?>
-                        <img src="<?php echo esc_url( $signature_name_img_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" style="display:block;max-width:100%;height:30px;margin:0;" />
+                        <img src="<?php echo esc_url( $signature_name_img_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" style="display:block;margin:0;" />
                     <?php else : ?>
-                        <p class="signature-name esp-render" data-field="name" style="margin:0;display:inline-block;white-space:nowrap;line-height:1;font-size:30px;"><?php echo esc_html( get_the_title() ); ?></p>
+                        <p class="signature-name esp-render" data-field="name" style="margin:0;display:inline-block;white-space:nowrap;line-height:1;font-size:29px;"><?php echo esc_html( get_the_title() ); ?></p>
                     <?php endif; ?>
 
                     <?php if ( $signature_title_img_url ) : ?>
-                        <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;max-width:100%;height:15px;margin:6px 0 16px;" />
+                        <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;margin:8px 0 16px;" />
                     <?php else : ?>
-                        <p class="signature-title esp-render" data-field="title" style="margin:6px 0 16px;font-size:18px;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
+                        <p class="signature-title esp-render" data-field="title" style="margin:6px 0 16px;font-size:15px;font-weight:400;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
                     <?php endif; ?>
 
                     <!-- CTA + Phone -->
@@ -126,13 +126,13 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                         <tr>
                             <?php if ( $cta_button ) : ?>
                                 <td class="signature-cta" style="padding-right:18px;">
-                                    <a href="<?php echo esc_url( $meeting_url ); ?>" target="_blank"><img src="<?php echo esc_url( $cta_button ); ?>" alt="CTA" style="display:block;height:28px;" /></a>
+                                    <a href="<?php echo esc_url( $meeting_url ); ?>" target="_blank"><img src="<?php echo esc_url( $cta_button ); ?>" alt="CTA" style="display:block;height:32px;" /></a>
                                 </td>
                             <?php endif; ?>
-                            <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $secondary ); ?>;font-size:16px;white-space:nowrap;">
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $secondary ); ?>;text-decoration:none;font-weight:500;">
+                            <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $secondary ); ?>;font-size:15px;white-space:nowrap;">
+                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $secondary ); ?>;text-decoration:none;font-weight:500;display:inline-block;line-height:0;vertical-align:middle;margin-top:-4px;">
                                     <?php if ( $signature_phone_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_img_url ); ?>" alt="<?php echo esc_attr( 'M ' . $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-9px;" />
+                                        <img src="<?php echo esc_url( $signature_phone_img_url ); ?>" alt="<?php echo esc_attr( 'M ' . $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="phone"><small style="font-weight:400;">M</small> <?php echo esc_html( $phone_display ); ?></span>
                                     <?php endif; ?>
@@ -154,20 +154,19 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin: 6px 0;">
                         <tr>
                             <!-- Company Logo -->
-                            <td valign="middle" style="padding-right:20px;white-space:nowrap;">
+                            <td style="padding-right:20px;white-space:nowrap;">
                                 <?php if ( $company_logo ) : ?>
                                     <a href="<?php echo esc_url( $site_url_raw ); ?>" target="_blank" style="display:inline-block;">
-                                        <img src="<?php echo esc_url( $company_logo ); ?>" alt="Company Logo" style="margin-top:4px;" />
+                                        <img src="<?php echo esc_url( $company_logo ); ?>" alt="Company Logo" style="vertical-align:middle;" />
                                     </a>
                                 <?php endif; ?>
                             </td>
 
                             <!-- Phone bottom -->
-                            <td valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
-                                <span style="font-size:14px;margin-right:2px;line-height:1;display:inline-block;">○</span>
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;display:inline-block;margin-right:2px;">
+                            <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;vertical-align:baseline;padding-top:2px;">
+                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:400;display:inline-block;margin-right:2px;line-height:0;vertical-align:middle;">
                                     <?php if ( $signature_phone_only_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-15px;" />
+                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="phone_only" style="font-weight:bold;"><?php echo esc_html( $phone_display ); ?></span>
                                     <?php endif; ?>
@@ -175,10 +174,10 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                             </td>
 
                             <!-- Website -->
-                            <td align="right" valign="middle" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;">
-                                <a href="<?php echo esc_url( $site_url_raw ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;" target="_blank">
+                            <td align="right" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;vertical-align:baseline;">
+                                <a href="<?php echo esc_url( $site_url_raw ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:500;display:inline-block;line-height:0;vertical-align:middle;" target="_blank">
                                     <?php if ( $signature_site_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;margin-top:-15px;" />
+                                        <img src="<?php echo esc_url( $signature_site_img_url ); ?>" alt="<?php echo esc_attr( strtoupper( $site_domain ) ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;" />
                                     <?php else : ?>
                                         <span class="esp-render" data-field="site"><?php echo esc_html( strtoupper( $site_domain ) ); ?></span>
                                     <?php endif; ?>
@@ -220,11 +219,54 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
                 var pending = renders.length;
 
+                // Utility: trim transparent whitespace from a canvas so resulting PNG has no extra padding.
+                function trimCanvas(canvas){
+                    var ctx = canvas.getContext('2d');
+                    var width = canvas.width;
+                    var height = canvas.height;
+
+                    // Get pixel data (alpha channel only) and determine bounding box of non-transparent pixels.
+                    var imgData = ctx.getImageData(0, 0, width, height).data;
+                    var top = height, left = width, right = 0, bottom = 0;
+
+                    for(var y = 0; y < height; y++){
+                        for(var x = 0; x < width; x++){
+                            var alpha = imgData[(y * width + x) * 4 + 3]; // alpha channel
+                            if(alpha !== 0){
+                                if(x < left) { left = x; }
+                                if(x > right){ right = x; }
+                                if(y < top)  { top = y; }
+                                if(y > bottom){ bottom = y; }
+                            }
+                        }
+                    }
+
+                    // If nothing found, return original canvas.
+                    if(right - left <= 0 || bottom - top <= 0){
+                        return canvas;
+                    }
+
+                    var trimmedWidth  = right - left + 1;
+                    var trimmedHeight = bottom - top + 1;
+                    var trimmed = document.createElement('canvas');
+                    trimmed.width  = trimmedWidth;
+                    trimmed.height = trimmedHeight;
+                    trimmed.getContext('2d').drawImage(canvas, left, top, trimmedWidth, trimmedHeight, 0, 0, trimmedWidth, trimmedHeight);
+                    return trimmed;
+                }
+
                 renders.forEach(function(el){
                     const field = el.dataset.field;
-                    // Capture at higher pixel density so resulting PNG is crisp on retina/high-DPI displays.
-                    var scale = window.devicePixelRatio || 3; // default to 2× if DPR not available.
+                    // Capture at a higher pixel density for extra clarity.
+                    // We multiply the current devicePixelRatio to create an over-sampling effect,
+                    // ensuring the small final images (≈20px tall) remain razor-sharp.
+                    var dpr   = window.devicePixelRatio || 1;
+                    // Render at 1× the devicePixelRatio (results in natural-sized PNGs).
+                    // Example: DPR 2 → scale 2; DPR 1 → scale 1.
+                    var scale = dpr;
                     html2canvas(el, {backgroundColor: null, scale: scale}).then(function(canvas){
+                        // Remove any transparent whitespace before encoding.
+                        canvas = trimCanvas(canvas);
                         var dataUrl = canvas.toDataURL('image/png');
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
@@ -330,9 +372,28 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
             });
 
-            // Reveal copy button once all resources are fully loaded (images, fonts, etc.)
+            // Reveal copy button once all assets are fully loaded.
             window.addEventListener('load', function(){
                 copyBtn.style.display = 'inline-block';
+
+                // ------------------------------------------------------------------
+                // Ensure all <img> elements inside the signature have explicit width
+                // and height attributes so that email clients (which often strip
+                // inline styles) render them at the correct size instead of their
+                // full natural resolution.
+                // ------------------------------------------------------------------
+                var imgs = document.querySelectorAll('.signature-card img');
+                imgs.forEach(function(img){
+                    // Skip if attributes already present.
+                    if(img.hasAttribute('width') || img.hasAttribute('height')){ return; }
+
+                    // Use the element's rendered size as the desired dimension.
+                    var rect = img.getBoundingClientRect();
+                    if(rect.width && rect.height){
+                        img.setAttribute('width',  Math.round(rect.width));
+                        img.setAttribute('height', Math.round(rect.height));
+                    }
+                });
             });
 
             // Regenerate button logic.
