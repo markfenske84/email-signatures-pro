@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: Mark Fenske
  * Text Domain: email-signatures-pro
  */
@@ -24,8 +24,7 @@ if ( ! class_exists( 'Puc_v4_Factory' ) ) {
 // Configure the update checker if the library is available.
 if ( class_exists( 'Puc_v4_Factory' ) ) {
 	$esp_update_checker = Puc_v4_Factory::buildUpdateChecker(
-		// TODO: Replace this URL with the actual location of your update metadata file.
-		'https://example.com/updates/email-signatures-pro.json',
+		'https://github.com/markfenske84/email-signatures-pro/',
 		__FILE__,
 		'email-signatures-pro'
 	);
