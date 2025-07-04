@@ -30,11 +30,10 @@ if ( class_exists( 'Puc_v4_Factory' ) ) {
 	);
 
 	// OPTIONAL: If you're using a version control repository like GitHub, Bitbucket or GitLab, uncomment and adjust these lines.
-	// $esp_update_checker->setBranch( 'main' ); // e.g. main, stable, etc.
+	$esp_update_checker->setBranch( 'main' ); // e.g. main, stable, etc.
 	// $esp_update_checker->getVcsApi()->enableReleaseAssets();
 
-	// Point the checker at the branch where you create your tags.
-	$esp_update_checker->setBranch( 'main' );
+	add_filter( 'puc-debug-bar-enabled', '__return_true' );
 }
 
 if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
