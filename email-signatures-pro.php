@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Mark Fenske
  * Text Domain: email-signatures-pro
  */
@@ -283,6 +283,8 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			/* ---------------- General Tab ---------------- */
 			add_settings_section( 'esp_general_section', __( 'General', 'email-signatures-pro' ), '__return_false', $pages['general'] );
 			add_settings_field( 'website_url', __( 'Signature Website URL', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['general'], 'esp_general_section', array( 'id' => 'website_url' ) );
+            // Office phone number field below website URL.
+            add_settings_field( 'office_phone', __( 'Office Phone Number', 'email-signatures-pro' ), array( $this, 'text_input_callback' ), $pages['general'], 'esp_general_section', array( 'id' => 'office_phone' ) );
 		}
 
 		public function sanitize_settings( $input ) {
@@ -295,6 +297,7 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				'primary_color', 'secondary_color', 'tertiary_color', 'neutral_color',
 				'default_avatar', 'company_logo', 'cta_button',
 				'website_url',
+				'office_phone',
 			];
 
 			foreach ( $fields as $field ) {

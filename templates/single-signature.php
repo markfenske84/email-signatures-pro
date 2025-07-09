@@ -18,6 +18,7 @@ $meeting_url  = get_post_meta( $post->ID, '_esp_meeting_url', true );
 $avatar_url   = get_the_post_thumbnail_url( $post, 'medium' );
 
 $options      = get_option( 'esp_settings', array() );
+$office_phone = $options['office_phone'] ?? '';
 $company_logo = $options['company_logo'] ?? '';
 $cta_button   = $options['cta_button'] ?? '';
 $primary      = $options['primary_color'] ?? '#000000';
@@ -41,6 +42,17 @@ if ( 10 === strlen( $phone_digits ) ) {
     $phone_display = substr( $phone_digits, 1, 3 ) . '.' . substr( $phone_digits, 4, 3 ) . '.' . substr( $phone_digits, 7 );
 } elseif ( 7 === strlen( $phone_digits ) ) {
     $phone_display = substr( $phone_digits, 0, 3 ) . '.' . substr( $phone_digits, 3 );
+}
+
+// Format office phone number similarly.
+$office_digits  = preg_replace( '/\D+/', '', $office_phone );
+$office_display = $office_digits;
+if ( 10 === strlen( $office_digits ) ) {
+    $office_display = substr( $office_digits, 0, 3 ) . '.' . substr( $office_digits, 3, 3 ) . '.' . substr( $office_digits, 6 );
+} elseif ( 11 === strlen( $office_digits ) && '1' === $office_digits[0] ) {
+    $office_display = substr( $office_digits, 1, 3 ) . '.' . substr( $office_digits, 4, 3 ) . '.' . substr( $office_digits, 7 );
+} elseif ( 7 === strlen( $office_digits ) ) {
+    $office_display = substr( $office_digits, 0, 3 ) . '.' . substr( $office_digits, 3 );
 }
 
 // Site URL from plugin settings, fall back to WordPress site URL.
@@ -164,11 +176,11 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
                             <!-- Phone bottom -->
                             <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;vertical-align:baseline;padding-top:2px;">
-                                <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:400;display:inline-block;margin-right:2px;line-height:0;vertical-align:middle;">
+                                <a href="tel:<?php echo esc_attr( $office_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:400;display:inline-block;margin-right:2px;line-height:0;vertical-align:middle;">
                                     <?php if ( $signature_phone_only_img_url ) : ?>
-                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( $phone_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;" />
+                                        <img src="<?php echo esc_url( $signature_phone_only_img_url ); ?>" alt="<?php echo esc_attr( 'O ' . $office_display ); ?>" style="display:inline-block;max-height:20px;vertical-align:middle;" />
                                     <?php else : ?>
-                                        <span class="esp-render" data-field="phone_only" style="font-weight:bold;"><?php echo esc_html( $phone_display ); ?></span>
+                                        <span class="esp-render" data-field="phone_only" style="font-weight:bold;"><small style="font-weight:400;">O</small> <?php echo esc_html( $office_display ); ?></span>
                                     <?php endif; ?>
                                 </a>
                             </td>
