@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Webfor Agency
  * Author URI: https://webfor.com
  * Text Domain: email-signatures-pro
