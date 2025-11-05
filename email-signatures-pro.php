@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Email Signatures Pro
  * Description: Manage email signature templates, global styles and assets.
- * Version: 1.1.3
+ * Version: 1.2.0
  * Author: Webfor Agency
  * Author URI: https://webfor.com
  * Text Domain: email-signatures-pro
@@ -82,13 +82,6 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				// Meta boxes.
 				add_action( 'add_meta_boxes_signature', array( $this, 'register_meta_boxes' ) );
 				add_action( 'save_post_signature', array( $this, 'save_signature_meta' ) );
-
-				// NEW: Handle manual update checks & notices in admin.
-				add_action( 'admin_init', array( $this, 'handle_check_updates_action' ) );
-				add_action( 'admin_notices', array( $this, 'maybe_show_update_notice' ) );
-
-				// NEW: Filter plugin meta row to add "Check for Updates" after author.
-				add_filter( 'plugin_row_meta', array( $this, 'add_plugin_row_meta' ), 10, 4 );
 			}
 
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_action_link' ) );
@@ -167,43 +160,43 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			$job_title    = get_post_meta( $post->ID, '_esp_job_title', true );
 			$phone_number = get_post_meta( $post->ID, '_esp_phone_number', true );
 			$meeting_url  = get_post_meta( $post->ID, '_esp_meeting_url', true );
-			?>
-			<p>
-				<label for="esp_job_title"><strong><?php _e( 'Title / Position', 'email-signatures-pro' ); ?></strong></label><br />
-				<input type="text" id="esp_job_title" name="esp_job_title" class="widefat" value="<?php echo esc_attr( $job_title ); ?>" />
-			</p>
+		?>
+		<p>
+			<label for="esp_job_title"><strong><?php esc_html_e( 'Title / Position', 'email-signatures-pro' ); ?></strong></label><br />
+			<input type="text" id="esp_job_title" name="esp_job_title" class="widefat" value="<?php echo esc_attr( $job_title ); ?>" />
+		</p>
 
-			<p>
-				<label for="esp_phone_number"><strong><?php _e( 'Phone Number', 'email-signatures-pro' ); ?></strong></label><br />
-				<input type="text" id="esp_phone_number" name="esp_phone_number" class="widefat" value="<?php echo esc_attr( $phone_number ); ?>" />
-			</p>
+		<p>
+			<label for="esp_phone_number"><strong><?php esc_html_e( 'Phone Number', 'email-signatures-pro' ); ?></strong></label><br />
+			<input type="text" id="esp_phone_number" name="esp_phone_number" class="widefat" value="<?php echo esc_attr( $phone_number ); ?>" />
+		</p>
 
-			<p>
-				<label for="esp_meeting_url"><strong><?php _e( 'Meeting Link URL', 'email-signatures-pro' ); ?></strong></label><br />
-				<input type="url" id="esp_meeting_url" name="esp_meeting_url" class="widefat" value="<?php echo esc_url( $meeting_url ); ?>" />
-			</p>
-			<?php
+		<p>
+			<label for="esp_meeting_url"><strong><?php esc_html_e( 'Meeting Link URL', 'email-signatures-pro' ); ?></strong></label><br />
+			<input type="url" id="esp_meeting_url" name="esp_meeting_url" class="widefat" value="<?php echo esc_url( $meeting_url ); ?>" />
+		</p>
+		<?php
 		}
 
-		public function save_signature_meta( $post_id ) {
-			// Verify nonce.
-			if ( ! isset( $_POST['esp_signature_nonce'] ) || ! wp_verify_nonce( $_POST['esp_signature_nonce'], 'esp_save_signature' ) ) {
-				return;
-			}
+	public function save_signature_meta( $post_id ) {
+		// Verify nonce.
+		if ( ! isset( $_POST['esp_signature_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['esp_signature_nonce'] ) ), 'esp_save_signature' ) ) {
+			return;
+		}
 
-			// Check autosave.
-			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-				return;
-			}
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
 
-			// Check permissions.
-			if ( ! current_user_can( 'edit_post', $post_id ) ) {
-				return;
-			}
+		// Check permissions.
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
 
-			$job_title    = sanitize_text_field( $_POST['esp_job_title'] ?? '' );
-			$phone_number = sanitize_text_field( $_POST['esp_phone_number'] ?? '' );
-			$meeting_url  = esc_url_raw( $_POST['esp_meeting_url'] ?? '' );
+		$job_title    = isset( $_POST['esp_job_title'] ) ? sanitize_text_field( wp_unslash( $_POST['esp_job_title'] ) ) : '';
+		$phone_number = isset( $_POST['esp_phone_number'] ) ? sanitize_text_field( wp_unslash( $_POST['esp_phone_number'] ) ) : '';
+		$meeting_url  = isset( $_POST['esp_meeting_url'] ) ? esc_url_raw( wp_unslash( $_POST['esp_meeting_url'] ) ) : '';
 
 			update_post_meta( $post_id, '_esp_job_title', $job_title );
 			update_post_meta( $post_id, '_esp_phone_number', $phone_number );
@@ -379,15 +372,15 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				$src_path  = $tmp;
 			}
 
-			// Try loading PNG.
-			$im = @imagecreatefrompng( $src_path );
-			if ( ! $im ) {
-				// Clean tmp file if used.
-				if ( isset( $tmp ) && file_exists( $tmp ) ) {
-					unlink( $tmp );
-				}
-				return $icon_url;
+		// Try loading PNG.
+		$im = @imagecreatefrompng( $src_path );
+		if ( ! $im ) {
+			// Clean tmp file if used.
+			if ( isset( $tmp ) && file_exists( $tmp ) ) {
+				wp_delete_file( $tmp );
 			}
+			return $icon_url;
+		}
 
 			// Create new image preserving alpha.
 			$width  = imagesx( $im );
@@ -433,15 +426,15 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			// Save tinted PNG.
 			imagepng( $new_im, $dest_path );
 
-			imagedestroy( $im );
-			imagedestroy( $new_im );
+		imagedestroy( $im );
+		imagedestroy( $new_im );
 
-			// Clean tmp if we downloaded.
-			if ( isset( $tmp ) && file_exists( $tmp ) ) {
-				unlink( $tmp );
-			}
+		// Clean tmp if we downloaded.
+		if ( isset( $tmp ) && file_exists( $tmp ) ) {
+			wp_delete_file( $tmp );
+		}
 
-			return $dest_url;
+		return $dest_url;
 		}
 
 		/* --------------------------------------------------------------------- */
@@ -453,55 +446,97 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			return $options[ $key ] ?? $default;
 		}
 
-		public function text_input_callback( $args ) {
-			$id    = $args['id'];
-			$value = esc_attr( $this->get_option( $id ) );
-			echo "<input type=\"text\" name=\"" . self::OPTION_KEY . "[{$id}]\" id=\"{$id}\" class=\"regular-text\" value=\"{$value}\" />";
-		}
+	public function text_input_callback( $args ) {
+		$id    = $args['id'];
+		$value = esc_attr( $this->get_option( $id ) );
+		printf(
+			'<input type="text" name="%s[%s]" id="%s" class="regular-text" value="%s" />',
+			esc_attr( self::OPTION_KEY ),
+			esc_attr( $id ),
+			esc_attr( $id ),
+			esc_attr( $value )
+		);
+	}
 
-		public function color_input_callback( $args ) {
-			$id    = $args['id'];
-			$value = esc_attr( $this->get_option( $id, '#ffffff' ) );
-			echo "<input type=\"text\" class=\"esp-color-field\" name=\"" . self::OPTION_KEY . "[{$id}]\" id=\"{$id}\" value=\"{$value}\" data-default-color=\"#ffffff\" />";
-		}
+	public function color_input_callback( $args ) {
+		$id    = $args['id'];
+		$value = esc_attr( $this->get_option( $id, '#ffffff' ) );
+		printf(
+			'<input type="text" class="esp-color-field" name="%s[%s]" id="%s" value="%s" data-default-color="#ffffff" />',
+			esc_attr( self::OPTION_KEY ),
+			esc_attr( $id ),
+			esc_attr( $id ),
+			esc_attr( $value )
+		);
+	}
 
-		public function image_input_callback( $args ) {
-			$id    = $args['id'];
-			$value = esc_url( $this->get_option( $id ) );
+	public function image_input_callback( $args ) {
+		$id    = $args['id'];
+		$value = esc_url( $this->get_option( $id ) );
 
-			$img_preview = $value ? '<img src="' . $value . '" style="max-width:100px;height:auto;display:block;margin-bottom:10px;" />' : '';
+		$img_preview = $value ? sprintf( '<img src="%s" style="max-width:100px;height:auto;display:block;margin-bottom:10px;" />', esc_url( $value ) ) : '';
 
-			echo '<div class="esp-image-wrap">' . $img_preview . '</div>';
-			echo "<input type=\"hidden\" name=\"" . self::OPTION_KEY . "[{$id}]\" id=\"{$id}\" value=\"{$value}\" />";
-			echo "<button type=\"button\" class=\"button esp-upload-image\" data-target=\"{$id}\">" . __( 'Upload', 'email-signatures-pro' ) . "</button> ";
-			echo "<button type=\"button\" class=\"button esp-remove-image\" data-target=\"{$id}\">" . __( 'Remove', 'email-signatures-pro' ) . "</button>";
-		}
+		echo '<div class="esp-image-wrap">' . wp_kses_post( $img_preview ) . '</div>';
+		printf(
+			'<input type="hidden" name="%s[%s]" id="%s" value="%s" />',
+			esc_attr( self::OPTION_KEY ),
+			esc_attr( $id ),
+			esc_attr( $id ),
+			esc_url( $value )
+		);
+		printf(
+			'<button type="button" class="button esp-upload-image" data-target="%s">%s</button> ',
+			esc_attr( $id ),
+			esc_html__( 'Upload', 'email-signatures-pro' )
+		);
+		printf(
+			'<button type="button" class="button esp-remove-image" data-target="%s">%s</button>',
+			esc_attr( $id ),
+			esc_html__( 'Remove', 'email-signatures-pro' )
+		);
+	}
 
-		public function social_links_callback() {
-			$options = get_option( self::OPTION_KEY, array() );
-			$social_links = $options['social_links'] ?? array();
+	public function social_links_callback() {
+		$options = get_option( self::OPTION_KEY, array() );
+		$social_links = $options['social_links'] ?? array();
 
-			echo '<table class="widefat fixed" id="esp-social-links-table" style="max-width:800px;">';
-			echo '<thead><tr><th class="icon-col">' . __( 'Icon', 'email-signatures-pro' ) . '</th><th class="url-col">' . __( 'URL', 'email-signatures-pro' ) . '</th><th class="remove-col"></th></tr></thead>';
-			echo '<tbody>';
+		echo '<table class="widefat fixed" id="esp-social-links-table" style="max-width:800px;">';
+		echo '<thead><tr><th class="icon-col">' . esc_html__( 'Icon', 'email-signatures-pro' ) . '</th><th class="url-col">' . esc_html__( 'URL', 'email-signatures-pro' ) . '</th><th class="remove-col"></th></tr></thead>';
+		echo '<tbody>';
 
-			if ( ! empty( $social_links ) ) {
-				foreach ( $social_links as $index => $row ) {
-					$icon = esc_url( $row['icon'] );
-					$url  = esc_url( $row['url'] );
-					$preview = $icon ? '<img src="' . $icon . '" alt="" />' : '';
-					echo '<tr>';
-					echo '<td class="esp-icon-cell"><span class="esp-drag-handle dashicons dashicons-move" title="'. esc_attr__( 'Drag to reorder', 'email-signatures-pro' ) .'"></span><div class="esp-icon-preview">' . $preview . '</div><input type="hidden" class="esp-image-url" name="' . self::OPTION_KEY . '[social_links][' . $index . '][icon]" value="' . $icon . '" /> <button type="button" class="button button-small esp-upload-image" title="'. __( 'Edit icon', 'email-signatures-pro' ) .'"><span class="dashicons dashicons-edit"></span></button></td>';
-					echo '<td><input type="url" class="regular-text" name="' . self::OPTION_KEY . '[social_links][' . $index . '][url]" value="' . $url . '" placeholder="https://" /></td>';
-					echo '<td><button type="button" class="button button-small esp-remove-row" title="'. __( 'Remove', 'email-signatures-pro' ) .'"><span class="dashicons dashicons-trash"></span></button></td>';
-					echo '</tr>';
-				}
+		if ( ! empty( $social_links ) ) {
+			foreach ( $social_links as $index => $row ) {
+				$icon = esc_url( $row['icon'] );
+				$url  = esc_url( $row['url'] );
+				$preview = $icon ? sprintf( '<img src="%s" alt="" />', esc_url( $icon ) ) : '';
+				echo '<tr>';
+				printf(
+					'<td class="esp-icon-cell"><span class="esp-drag-handle dashicons dashicons-move" title="%s"></span><div class="esp-icon-preview">%s</div><input type="hidden" class="esp-image-url" name="%s[social_links][%d][icon]" value="%s" /> <button type="button" class="button button-small esp-upload-image" title="%s"><span class="dashicons dashicons-edit"></span></button></td>',
+					esc_attr__( 'Drag to reorder', 'email-signatures-pro' ),
+					wp_kses_post( $preview ),
+					esc_attr( self::OPTION_KEY ),
+					absint( $index ),
+					esc_url( $icon ),
+					esc_attr__( 'Edit icon', 'email-signatures-pro' )
+				);
+				printf(
+					'<td><input type="url" class="regular-text" name="%s[social_links][%d][url]" value="%s" placeholder="https://" /></td>',
+					esc_attr( self::OPTION_KEY ),
+					absint( $index ),
+					esc_url( $url )
+				);
+				printf(
+					'<td><button type="button" class="button button-small esp-remove-row" title="%s"><span class="dashicons dashicons-trash"></span></button></td>',
+					esc_attr__( 'Remove', 'email-signatures-pro' )
+				);
+				echo '</tr>';
 			}
-
-			echo '</tbody>'; // tbody
-			echo '</table>';
-			echo '<p><button type="button" class="button" id="esp-add-social-row">' . __( 'Add Social Link', 'email-signatures-pro' ) . '</button></p>';
 		}
+
+		echo '</tbody>'; // tbody
+		echo '</table>';
+		echo '<p><button type="button" class="button" id="esp-add-social-row">' . esc_html__( 'Add Social Link', 'email-signatures-pro' ) . '</button></p>';
+	}
 
 		/* --------------------------------------------------------------------- */
 		/* Admin Assets                                                         */
@@ -520,15 +555,14 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			// Media uploader.
 			wp_enqueue_media();
 
-			// Custom script.
-			wp_enqueue_script( 'esp-admin', plugin_dir_url( __FILE__ ) . 'assets/js/esp-admin.js', array( 'jquery', 'wp-color-picker' ), '1.0.0', true );
-			wp_localize_script( 'esp-admin', 'esp_admin', array( 'title' => __( 'Select or Upload Image', 'email-signatures-pro' ), 'choose' => __( 'Use this image', 'email-signatures-pro' ) ) );
-			wp_enqueue_style( 'esp-admin', plugin_dir_url( __FILE__ ) . 'assets/css/esp-admin.css', array(), '1.0.0' );
+		// Custom script (jQuery included only for wp-color-picker dependency).
+		wp_enqueue_script( 'esp-admin', plugin_dir_url( __FILE__ ) . 'assets/js/esp-admin.js', array( 'wp-color-picker' ), '1.2.1', true );
+		wp_localize_script( 'esp-admin', 'esp_admin', array( 'title' => __( 'Select or Upload Image', 'email-signatures-pro' ), 'choose' => __( 'Use this image', 'email-signatures-pro' ) ) );
+		wp_enqueue_style( 'esp-admin', plugin_dir_url( __FILE__ ) . 'assets/css/esp-admin.css', array(), '1.0.0' );
 
-			// Ensure dashicons are available in admin.
-			wp_enqueue_style( 'dashicons' );
-			wp_enqueue_script( 'jquery-ui-sortable' );
-		}
+		// Ensure dashicons are available in admin.
+		wp_enqueue_style( 'dashicons' );
+	}
 
 		/* --------------------------------------------------------------------- */
 		/* Tab helpers                                                          */
@@ -551,20 +585,31 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 		/* Settings Page Markup                                                 */
 		/* --------------------------------------------------------------------- */
 
-		public function render_settings_page() {
-			$tabs = $this->get_setting_tabs();
-			$current = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'fonts';
-			if ( ! isset( $tabs[ $current ] ) ) {
-				$current = 'fonts';
-			}
+	public function render_settings_page() {
+		$tabs = $this->get_setting_tabs();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Tab navigation doesn't require nonce.
+		$current = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'fonts';
+		if ( ! isset( $tabs[ $current ] ) ) {
+			$current = 'fonts';
+		}
 
-			// Base URL without tab param.
-			$base_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
-			?>
-			<div class="wrap">
-				<h1><?php esc_html_e( 'Email Signatures Pro Settings', 'email-signatures-pro' ); ?></h1>
+		// Base URL without tab param.
+		$base_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Email Signatures Pro Settings', 'email-signatures-pro' ); ?></h1>
 
-				<h2 class="nav-tab-wrapper">
+			<?php
+			// Show success message after save.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checking for WordPress settings update confirmation.
+			if ( isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated'] ) :
+				?>
+				<div class="notice notice-success is-dismissible">
+					<p><?php esc_html_e( 'Settings saved successfully!', 'email-signatures-pro' ); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<h2 class="nav-tab-wrapper">
 					<?php foreach ( $tabs as $slug => $label ) :
 						$tab_url = add_query_arg( 'tab', $slug, $base_url );
 						$class   = ( $slug === $current ) ? 'nav-tab nav-tab-active' : 'nav-tab';
@@ -623,19 +668,19 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 				wp_send_json_error( __( 'Permission denied.', 'email-signatures-pro' ) );
 			}
 
-			if ( empty( $_POST['image'] ) ) {
-				wp_send_json_error( __( 'No image data.', 'email-signatures-pro' ) );
-			}
+		if ( empty( $_POST['image'] ) ) {
+			wp_send_json_error( __( 'No image data.', 'email-signatures-pro' ) );
+		}
 
-			$field     = sanitize_key( $_POST['field'] ?? '' );
-			$allowed_fields = array( 'name', 'title', 'phone', 'phone_only', 'site' );
-			if ( ! in_array( $field, $allowed_fields, true ) ) {
-				wp_send_json_error( __( 'Invalid field.', 'email-signatures-pro' ) );
-			}
+		$field     = isset( $_POST['field'] ) ? sanitize_key( wp_unslash( $_POST['field'] ) ) : '';
+		$allowed_fields = array( 'name', 'title', 'phone', 'phone_only', 'site' );
+		if ( ! in_array( $field, $allowed_fields, true ) ) {
+			wp_send_json_error( __( 'Invalid field.', 'email-signatures-pro' ) );
+		}
 
-			$image_data = $_POST['image'];
-			$image_data = str_replace( 'data:image/png;base64,', '', $image_data );
-			$image_data = str_replace( ' ', '+', $image_data );
+		$image_data = isset( $_POST['image'] ) ? sanitize_text_field( wp_unslash( $_POST['image'] ) ) : '';
+		$image_data = str_replace( 'data:image/png;base64,', '', $image_data );
+		$image_data = str_replace( ' ', '+', $image_data );
 
 			$decoded = base64_decode( $image_data );
 			if ( ! $decoded ) {
@@ -709,74 +754,17 @@ if ( ! class_exists( 'Email_Signatures_Pro' ) ) {
 			wp_send_json_success();
 		}
 
-		/* --------------------------------------------------------------------- */
-		/* Plugin Row Action Links                                              */
-		/* --------------------------------------------------------------------- */
+	/* --------------------------------------------------------------------- */
+	/* Plugin Row Action Links                                              */
+	/* --------------------------------------------------------------------- */
 
-		public function add_settings_action_link( $links ) {
-			$settings_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
-			$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . __( 'Settings', 'email-signatures-pro' ) . '</a>';
+	public function add_settings_action_link( $links ) {
+		$settings_url = admin_url( 'edit.php?post_type=signature&page=email-signatures-pro' );
+		$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . __( 'Settings', 'email-signatures-pro' ) . '</a>';
 
-			// Remove previously added Check for Updates from this set so it appears only in meta row.
-			array_unshift( $links, $settings_link );
-			return $links;
-		}
-
-		/**
-		 * Add a "Check for Updates" link to the plugin meta row (after author name).
-		 *
-		 * @param string[] $plugin_meta Array of the plugin row meta.
-		 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
-		 * @param array    $plugin_data Data about the plugin.
-		 * @param string   $status      Status of the plugin.
-		 * @return string[]
-		 */
-		public function add_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
-			if ( plugin_basename( __FILE__ ) !== $plugin_file ) {
-				return $plugin_meta;
-			}
-
-			$check_updates_url = wp_nonce_url( admin_url( 'plugins.php?esp_action=check_updates' ), 'esp_check_updates' );
-			$plugin_meta[] = '<a href="' . esc_url( $check_updates_url ) . '">' . __( 'Check for Updates', 'email-signatures-pro' ) . '</a>';
-			return $plugin_meta;
-		}
-
-		/**
-		 * Handle the "Check for Updates" action triggered from the plugin row link.
-		 */
-		public function handle_check_updates_action() {
-			if ( ! isset( $_GET['esp_action'] ) || 'check_updates' !== $_GET['esp_action'] ) {
-				return;
-			}
-
-			// Capability & nonce checks.
-			if ( ! current_user_can( 'update_plugins' ) ) {
-				return;
-			}
-			check_admin_referer( 'esp_check_updates' );
-
-			// Call Plugin Update Checker if available.
-			global $esp_update_checker;
-			if ( isset( $esp_update_checker ) && is_object( $esp_update_checker ) && method_exists( $esp_update_checker, 'checkForUpdates' ) ) {
-				$esp_update_checker->checkForUpdates();
-			} else {
-				// Fallback – ask WP to refresh all plugin updates.
-				wp_update_plugins();
-			}
-
-			// Redirect back to Plugins page so user can see result.
-			wp_safe_redirect( add_query_arg( 'esp_checked', '1', admin_url( 'plugins.php' ) ) );
-			exit;
-		}
-
-		/**
-		 * Display an admin notice after a manual update check has run.
-		 */
-		public function maybe_show_update_notice() {
-			if ( isset( $_GET['esp_checked'] ) && '1' === $_GET['esp_checked'] ) {
-				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Email Signatures Pro has just checked for updates. If a new version is available it will appear below.', 'email-signatures-pro' ) . '</p></div>';
-			}
-		}
+		array_unshift( $links, $settings_link );
+		return $links;
+	}
 
 	}
 

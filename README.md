@@ -1,5 +1,13 @@
 # Email Signatures Pro
 
+**Contributors:** Webfor Agency  
+**Tags:** email, signature, template, team  
+**Requires at least:** 5.0  
+**Tested up to:** 6.8  
+**Stable tag:** 1.2.0  
+**License:** GPL v2 or later  
+**License URI:** https://www.gnu.org/licenses/gpl-2.0.html
+
 A WordPress plugin for managing professional email signature templates with global styles, custom fields, and automated image generation.
 
 ## Description
@@ -148,6 +156,16 @@ To check for updates manually:
 - GD Library (for image manipulation)
 
 ## Changelog
+
+### Version 1.2.0
+- Converted all jQuery code to vanilla JavaScript
+- Added unsaved changes warning system for settings page
+- Improved change detection for color pickers, image uploads, and form fields
+- Added auto-dismissing success message after saving settings
+- Fixed WordPress coding standards compliance issues
+- Enhanced security with proper input sanitization and escaping
+- Replaced deprecated functions (unlink to wp_delete_file)
+- Added HTML5 drag-and-drop for sortable social links
 
 ### Version 1.1.3
 - Implemented plugin-update-checker with direct folder structure

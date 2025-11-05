@@ -84,6 +84,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo esc_html( get_the_title() ); ?> – Signature</title>
     <?php if ( $fonts_url ) : ?>
+        <?php /* phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Template-specific font loading from settings */ ?>
         <link rel="stylesheet" href="<?php echo esc_url( $fonts_url ); ?>" />
     <?php endif; ?>
     <style>
@@ -229,6 +230,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
     <?php
         $need_render = ( ! $signature_name_img_url || ! $signature_title_img_url || ! $signature_phone_img_url || ! $signature_phone_only_img_url || ! $signature_site_img_url );
         if ( current_user_can( 'edit_post', $post->ID ) && $need_render ) : ?>
+        <?php /* phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript, PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- html2canvas library required for signature image generation, loaded only for editors */ ?>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function(){
@@ -282,14 +284,14 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                         // Remove any transparent whitespace before encoding.
                         canvas = trimCanvas(canvas);
                         var dataUrl = canvas.toDataURL('image/png');
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
-                        var formData = new FormData();
-                        formData.append('action', 'esp_upload_signature_image');
-                        formData.append('nonce', '<?php echo wp_create_nonce( 'esp_signature_image' ); ?>');
-                        formData.append('post_id', '<?php echo (int) $post->ID; ?>');
-                        formData.append('field', field);
-                        formData.append('image', dataUrl);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
+                    var formData = new FormData();
+                    formData.append('action', 'esp_upload_signature_image');
+                    formData.append('nonce', '<?php echo esc_attr( wp_create_nonce( 'esp_signature_image' ) ); ?>');
+                    formData.append('post_id', '<?php echo (int) $post->ID; ?>');
+                    formData.append('field', field);
+                    formData.append('image', dataUrl);
                         xhr.onload = function(){
                             if(--pending === 0){ location.reload(); }
                         };
@@ -421,12 +423,12 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                     regenBtn.disabled = true;
                     regenBtn.textContent = 'Regenerating…';
 
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
-                    var formData = new FormData();
-                    formData.append('action', 'esp_regenerate_signature');
-                    formData.append('nonce', '<?php echo wp_create_nonce( 'esp_regenerate_signature' ); ?>');
-                    formData.append('post_id', '<?php echo (int) $post->ID; ?>');
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>');
+                var formData = new FormData();
+                formData.append('action', 'esp_regenerate_signature');
+                formData.append('nonce', '<?php echo esc_attr( wp_create_nonce( 'esp_regenerate_signature' ) ); ?>');
+                formData.append('post_id', '<?php echo (int) $post->ID; ?>');
                     xhr.onload = function(){
                         location.reload();
                     };
