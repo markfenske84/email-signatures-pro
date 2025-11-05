@@ -120,27 +120,30 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                 </td>
 
                 <!-- Main details -->
-                <td valign="top" align="left" style="padding-top:5px;">
+                <td valign="center" align="left" style="padding-top:5px;">
                     <?php if ( $signature_name_img_url ) : ?>
                         <img src="<?php echo esc_url( $signature_name_img_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" style="display:block;margin:0;" />
                     <?php else : ?>
                         <p class="signature-name esp-render" data-field="name" style="margin:0;display:inline-block;white-space:nowrap;line-height:1;font-size:29px;"><?php echo esc_html( get_the_title() ); ?></p>
                     <?php endif; ?>
 
-                    <?php if ( $signature_title_img_url ) : ?>
-                        <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;margin:8px 0 16px;" />
-                    <?php else : ?>
-                        <p class="signature-title esp-render" data-field="title" style="margin:6px 0 16px;font-size:15px;font-weight:400;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
+                    <?php if ( $job_title ) : ?>
+                        <?php if ( $signature_title_img_url ) : ?>
+                            <img src="<?php echo esc_url( $signature_title_img_url ); ?>" alt="<?php echo esc_attr( $job_title ); ?>" style="display:block;margin:8px 0 16px;" />
+                        <?php else : ?>
+                            <p class="signature-title esp-render" data-field="title" style="margin:6px 0 16px;font-size:15px;font-weight:400;display:inline-block;white-space:nowrap;line-height:1;"><?php echo esc_html( $job_title ); ?></p>
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <!-- CTA + Phone -->
                     <table cellpadding="0" cellspacing="0" class="signature-cta-line">
                         <tr>
-                            <?php if ( $cta_button ) : ?>
+                            <?php if ( $cta_button && $meeting_url ) : ?>
                                 <td class="signature-cta" style="padding-right:18px;">
                                     <a href="<?php echo esc_url( $meeting_url ); ?>" target="_blank"><img src="<?php echo esc_url( $cta_button ); ?>" alt="CTA" style="display:block;height:32px;" /></a>
                                 </td>
                             <?php endif; ?>
+                            <?php if ( $phone_number ) : ?>
                             <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $secondary ); ?>;font-size:15px;white-space:nowrap;">
                                 <a href="tel:<?php echo esc_attr( $phone_digits ); ?>" style="color:<?php echo esc_html( $secondary ); ?>;text-decoration:none;font-weight:500;display:inline-block;line-height:0;vertical-align:middle;margin-top:-4px;">
                                     <?php if ( $signature_phone_img_url ) : ?>
@@ -150,6 +153,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                                     <?php endif; ?>
                                 </a>
                             </td>
+                            <?php endif; ?>
                         </tr>
                     </table>
                 </td>
@@ -175,6 +179,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                             </td>
 
                             <!-- Phone bottom -->
+                            <?php if ( $office_phone ) : ?>
                             <td style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;vertical-align:baseline;padding-top:2px;">
                                 <a href="tel:<?php echo esc_attr( $office_digits ); ?>" style="color:<?php echo esc_html( $neutral ); ?>;text-decoration:none;font-weight:400;display:inline-block;margin-right:2px;line-height:0;vertical-align:middle;">
                                     <?php if ( $signature_phone_only_img_url ) : ?>
@@ -184,6 +189,7 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
                                     <?php endif; ?>
                                 </a>
                             </td>
+                            <?php endif; ?>
 
                             <!-- Website -->
                             <td align="right" style="font-family:<?php echo esc_html( $body_css ); ?>;color:<?php echo esc_html( $neutral ); ?>;font-size:14px;white-space:nowrap;vertical-align:baseline;">
@@ -269,13 +275,9 @@ $signature_phone_only_img_url = $signature_phone_only_img_id ? wp_get_attachment
 
                 renders.forEach(function(el){
                     const field = el.dataset.field;
-                    // Capture at a higher pixel density for extra clarity.
-                    // We multiply the current devicePixelRatio to create an over-sampling effect,
-                    // ensuring the small final images (≈20px tall) remain razor-sharp.
-                    var dpr   = window.devicePixelRatio || 1;
-                    // Render at 1× the devicePixelRatio (results in natural-sized PNGs).
-                    // Example: DPR 2 → scale 2; DPR 1 → scale 1.
-                    var scale = dpr;
+                    // Render at 1x scale to match actual text size.
+                    // Using devicePixelRatio was causing oversized images on high-DPI displays.
+                    var scale = 1;
                     html2canvas(el, {backgroundColor: null, scale: scale}).then(function(canvas){
                         // Remove any transparent whitespace before encoding.
                         canvas = trimCanvas(canvas);
